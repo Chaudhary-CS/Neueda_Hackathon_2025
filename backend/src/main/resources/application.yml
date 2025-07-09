@@ -1,0 +1,158 @@
+spring:
+  application:
+    name: trace-the-change-backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  
+  # Database Configuration
+  data:
+    cassandra:
+      keyspace-name: ${CASSANDRA_KEYSPACE:charity_donations}
+      contact-points: ${CASSANDRA_CONTACT_POINTS:localhost}
+      port: ${CASSANDRA_PORT:9042}
+      local-datacenter: ${CASSANDRA_DATACENTER:datacenter1}
+      schema-action: CREATE_IF_NOT_EXISTS
+      
+  # Security Configuration
+  security:
+    user:
+      name: ${ADMIN_USERNAME:admin}
+      password: ${ADMIN_PASSWORD:admin123}
+  
+  # Jackson Configuration
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+# Server Configuration
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+
+# Management Endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging Configuration
+logging:
+  level:
+    com.example.demo: ${LOG_LEVEL:INFO}
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# AstraDB Configuration
+astra:
+  db:
+    rest:
+      endpoint: ${ASTRADB_ENDPOINT:https://api.astra.datastax.com}
+      keyspace: ${ASTRADB_KEYSPACE:charity_donations}
+      token: ${ASTRADB_TOKEN:}
+      region: ${ASTRADB_REGION:us-east1}
+
+# API Documentation
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  info:
+    title: Trace the Change API
+    description: Blockchain-based charity donation platform API
+    version: 1.0.0
+    contact:
+      name: Citi Hackathon 2025 Team
+      email: hackathon@trace-the-change.com
+
+# CORS Configuration
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,https://trace-the-change.vercel.app}
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+  max-age: 3600
+
+# Rate Limiting
+rate-limit:
+  requests-per-minute: ${RATE_LIMIT_REQUESTS:100}
+  burst-capacity: ${RATE_LIMIT_BURST:200}
+
+# Blockchain Configuration
+blockchain:
+  ethereum:
+    network: ${ETHEREUM_NETWORK:sepolia}
+    rpc-url: ${ETHEREUM_RPC_URL:https://sepolia.infura.io/v3/your-project-id}
+    contract-address: ${CONTRACT_ADDRESS:}
+    gas-limit: ${GAS_LIMIT:300000}
+    gas-price: ${GAS_PRICE:20000000000}
+
+# Feature Flags
+features:
+  blockchain-enabled: ${BLOCKCHAIN_ENABLED:true}
+  email-notifications: ${EMAIL_NOTIFICATIONS:false}
+  analytics-enabled: ${ANALYTICS_ENABLED:true}
+  audit-logging: ${AUDIT_LOGGING:true}
+
+---
+# Development Profile
+spring:
+  config:
+    activate:
+      on-profile: dev
+  data:
+    cassandra:
+      keyspace-name: charity_donations_dev
+logging:
+  level:
+    com.example.demo: DEBUG
+    org.springframework.web: DEBUG
+
+---
+# Production Profile
+spring:
+  config:
+    activate:
+      on-profile: prod
+  data:
+    cassandra:
+      keyspace-name: charity_donations_prod
+logging:
+  level:
+    com.example.demo: WARN
+    org.springframework.web: WARN
+server:
+  port: 8080
+
+---
+# Test Profile
+spring:
+  config:
+    activate:
+      on-profile: test
+  data:
+    cassandra:
+      keyspace-name: charity_donations_test
+logging:
+  level:
+    com.example.demo: DEBUG 
