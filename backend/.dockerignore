@@ -1,0 +1,51 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Runtime
+*.pid
+*.port
+
+# Test
+test/
+**/test/
+**/tests/
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Temporary files
+*.tmp
+*.temp
+.cache/ 
